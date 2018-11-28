@@ -23,7 +23,11 @@ const kittyPrompts = {
     // Return an array of just the names of kitties who are orange e.g.
     // ['Tiger', 'Snickers']
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties.filter((kitten) => {
+      return kitten.color === 'orange';
+    }).map((kitten) => {
+      return kitten.name;
+    });
     return result;
 
     // Annotation:
@@ -122,7 +126,12 @@ const modPrompts = {
     //   { mod: 4, studentsPerInstructor: 8 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = mods.map((e) => (
+      {
+        mod: e.mod,
+        studentsPerInstructor: e.students / e.instructors
+      }
+    ));
     return result;
 
     // Annotation:

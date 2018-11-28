@@ -16,11 +16,14 @@ const context = {
 
 
     // What is the value of `this` when we call ship.fly()?
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 'global window object';
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    /* Arrow functions do not have `this` so the
+    value of `this` is captured when the function is declared as oppossed to invoked like
+    with normal functions.
+    */
   },
 
   exerciseB() {
@@ -30,17 +33,20 @@ const context = {
     }
     
     // What is the value of `this` when we call fn()?
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 'global window object';
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    /*
+    Here the function is not being invoked on an object and so it by default inherits from
+    the global object `window`
+    */
   },
 
   exerciseC() {
     const car = {
       make: 'Tesla',
-      getInfo: function(){
+      getInfo: () => {
         console.log(this);
       }
     };
@@ -49,11 +55,15 @@ const context = {
     el.addEventListener('click', car.getInfo);
 
     // What is the value of `this` when a user clicks on our element and car.getInfo() is triggered?
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 'el';
     return result;
 
     // Annotation: 
-    // Write your annotation here as a comment
+    /* 
+      `this` refers to the element because getInfo is being passed as  reference and not invoked externally.
+      Since callbacks are invoked internally, `this` also gains the context of the event listener function
+      which is this case is `el` or the element that was selected from the DOM.
+    */
   },
 
   exerciseD() {
@@ -70,11 +80,14 @@ const context = {
 
 
     // What is the value of `this` when we call dog.getBreed()?
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 'global window object';
     return result;
 
     // Annotation: 
-    // Write your annotation here as a comment
+    /*
+    This returns the global window object because the inner function was not invoked
+    from an object an so it default to the window object.
+     */ 
   },
 
   exerciseE() {
@@ -86,11 +99,14 @@ const context = {
 
 
     // What is the value of `this` when we call fn()?
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 'global window object';
     return result;
 
     // Annotation: 
-    // Write your annotation here as a comment
+    /*
+      fn is being invoked with no context given, that is, it is not called directly from an object or used
+      after the word `new`. So the context it is given by default is the global window object.
+    */
   },
 
   exerciseF() {
@@ -109,11 +125,14 @@ const context = {
     const storm = new Hero('Ororo', 'weather control', true);
 
     // What is the value of `this` when we call storm.identifyHero()?
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 'instance of Hero';
     return result;
 
     // Annotation: 
-    // Write your annotation here as a comment
+    /* 
+      In this instance `this` would be an instance of Hero because Hero was invoked after the `new` keyword.
+      This causes `this` to gain the context of the instance instead of keeping the context of Hero.
+    */
   },
 
   exerciseG() {
@@ -137,11 +156,14 @@ const context = {
 
 
     // What is the value of `this` when we call monopoly.restart()?
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 'global window object';
     return result;
 
     // Annotation: 
-    // Write your annotation here as a comment
+    /*
+      In this instance it would be the global window object because `this` is used in a function that is 
+      call from a function and so the rule is that it will gain the global context by default.
+    */
   },
 
   exerciseH() {
@@ -157,11 +179,18 @@ const context = {
     obj.method();
 
     // What is the value of `this` when we call obj.arrowFunction()?
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 'obj';
     return result;
 
     // Annotation: 
-    // Write your annotation here as a comment
+    /*
+      Arrow functions with `this` gain context on declaration instead of invocation, as well as arrow
+      functions have no `this` inherintly. The arrow function is an inner funtion and so isn't technically 
+      declared/defined until `method` is ran. Method is a normal functin and gains it's context on invocation.
+      In this example it is invoked from an object and so given the context of that obj for `this`. The arrow
+      function is defined/declared/invoked right after and take the `this` from the outter function thus
+      return `obj`.
+    */
   },
 
   exerciseI() {  
@@ -180,11 +209,17 @@ const context = {
     }, poets);
 
     // What is the value of `this` that gets returned on each iteration of poets.map()?
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 'poets';
     return result;
 
     // Annotation: 
-    // Write your annotation here as a comment. Annotation should include explanation regarding the second argument of `poets` that is being passed
+    /*
+      The value of `this` is poets because map takes a second optional argument of `[,thisArg]` which
+      allows you to specify the context of this. In this example that second argument is poets. Without
+      that the global window object would be used because the callback is being used. This means that 
+      a function was called in another function and so this would have the context of the global window
+      object.
+    */
   },
 
   exerciseJ() {
@@ -194,11 +229,16 @@ const context = {
     });
 
     // What is the value of `this` when a user clicks on our #btn element and the callback is triggered?
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 'el';
     return result;
 
     // Annotation: 
-    // Write your annotation here as a comment.
+    /*
+      Similar to exerciseC using eventlisteneres excepting that we are using JQuery here. The main takeaway here is that 
+      encapsulating `this` with `$()` gives you access to JQuery methods because this is turned into a 
+      JQuery object. Explicitly, this is redefined inside of eventlisteners so this is given the locally
+      scoped value.
+    */
   },
 
   exerciseK() {
@@ -208,11 +248,14 @@ const context = {
     });
 
     // What is the value of `this` when a user clicks on our #btn element and the callback is triggered?
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 'el';
     return result;
 
     // Annotation: 
-    // Write your annotation here as a comment.
+    /*
+      Because we are using an arrow function, `this` is given its context when defined. However, this is
+      still being overridden by the event.target which is given the value of `this`.
+    */
   }
 
 };
