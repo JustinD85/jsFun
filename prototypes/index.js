@@ -23,9 +23,11 @@ const kittyPrompts = {
     // Return an array of just the names of kitties who are orange e.g.
     // ['Tiger', 'Snickers']
 
-    const result = kitties.filter((kitten) => {
+    const result = kitties
+      .filter((kitten) => {
       return kitten.color === 'orange';
-    }).map((kitten) => {
+    })
+      .map((kitten) => {
       return kitten.name;
     });
     return result;
@@ -37,7 +39,9 @@ const kittyPrompts = {
   sortByAge() {
     // Sort the kitties by their age
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties.sort((a,b) => {
+      return b.age - a.age;
+    })
     return result;
 
     // Annotation:
@@ -58,7 +62,10 @@ const kittyPrompts = {
     // },
     // ...etc]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties.map((kitten) => {
+      kitten.age += 2;
+      return kitten;
+    });
     return result;
   }
 };
@@ -90,7 +97,17 @@ const clubPrompts = {
     //   ...etc
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = clubs.reduce((acc, club) => {
+      club.members.forEach((member) => {
+        if (acc[member] === undefined) {
+          acc[member] = [];
+            acc[member].push(club.club);
+        } else {
+          acc[member].push(club.club);
+        } 
+      })
+      return acc;
+    }, {});
     return result;
 
     // Annotation:
@@ -166,7 +183,10 @@ const cakePrompts = {
     //    ..etc
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.map((cake) => {
+      let { cakeFlavor:flavor, inStock } = cake;
+      return { flavor, inStock };
+    });
     return result;
 
     // Annotation:
@@ -194,7 +214,9 @@ const cakePrompts = {
     // ..etc
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.filter((cake) => {
+      return cake.inStock > 0;
+    });
     return result;
 
     // Annotation:
@@ -205,7 +227,10 @@ const cakePrompts = {
     // Return the total amount of cakes in stock e.g.
     // 59
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.reduce((total, cake) => {
+      total += cake.inStock;
+      return total;
+    }, 0);
     return result;
 
     // Annotation:
@@ -217,7 +242,13 @@ const cakePrompts = {
     // every cake in the dataset e.g.
     // ['dutch process cocoa', 'toasted sugar', 'smoked sea salt', 'berries', ..etc]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.reduce((ingredients,cake) => {
+      ingredients.push(...cake.toppings);
+      return ingredients;
+    },[])
+      .filter((ingredient, index, flatArrIngredients) => {
+        return flatArrIngredients.indexOf(ingredient) === index;
+      })
     return result;
 
     // Annotation:
@@ -235,7 +266,18 @@ const cakePrompts = {
     //    ...etc
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.reduce((ingredients,cake) => {
+      ingredients.push(...cake.toppings);
+      return ingredients;
+    },[])
+      .reduce((ingredientList, ingredient) => {
+        if (ingredientList[ingredient] === undefined) {
+          ingredientList[ingredient] = 1;
+        } else {
+          ingredientList[ingredient]++;
+        }
+        return ingredientList;
+    }, {});
     return result;
 
     // Annotation:
@@ -270,7 +312,9 @@ const classPrompts = {
     //   { roomLetter: 'G', program: 'FE', capacity: 29 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = classrooms.filter((classroom) => {
+      return classroom.program === 'FE';
+    });
     return result;
 
     // Annotation:
@@ -285,7 +329,11 @@ const classPrompts = {
     //   beCapacity: 96
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = classrooms.reduce((capacity, classroom) => {
+      const program = classroom.program.toLowerCase();
+      capacity[`${program}Capacity`] += classroom.capacity;
+      return capacity;
+    }, {feCapacity:0,beCapacity:0});
     return result;
 
     // Annotation:
