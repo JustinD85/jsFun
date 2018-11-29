@@ -25,11 +25,11 @@ const kittyPrompts = {
 
     const result = kitties
       .filter((kitten) => {
-      return kitten.color === 'orange';
-    })
+        return kitten.color === 'orange';
+      })
       .map((kitten) => {
-      return kitten.name;
-    });
+        return kitten.name;
+      });
     return result;
 
     // Annotation:
@@ -39,7 +39,7 @@ const kittyPrompts = {
   sortByAge() {
     // Sort the kitties by their age
 
-    const result = kitties.sort((a,b) => {
+    const result = kitties.sort((a, b) => {
       return b.age - a.age;
     })
     return result;
@@ -101,10 +101,10 @@ const clubPrompts = {
       club.members.forEach((member) => {
         if (acc[member] === undefined) {
           acc[member] = [];
-            acc[member].push(club.club);
+          acc[member].push(club.club);
         } else {
           acc[member].push(club.club);
-        } 
+        }
       })
       return acc;
     }, {});
@@ -184,7 +184,7 @@ const cakePrompts = {
     // ]
 
     const result = cakes.map((cake) => {
-      let { cakeFlavor:flavor, inStock } = cake;
+      let { cakeFlavor: flavor, inStock } = cake;
       return { flavor, inStock };
     });
     return result;
@@ -222,7 +222,7 @@ const cakePrompts = {
     // Annotation:
     // Write your annotation here as a comment
   },
-  
+
   totalInventory() {
     // Return the total amount of cakes in stock e.g.
     // 59
@@ -242,10 +242,10 @@ const cakePrompts = {
     // every cake in the dataset e.g.
     // ['dutch process cocoa', 'toasted sugar', 'smoked sea salt', 'berries', ..etc]
 
-    const result = cakes.reduce((ingredients,cake) => {
+    const result = cakes.reduce((ingredients, cake) => {
       ingredients.push(...cake.toppings);
       return ingredients;
-    },[])
+    }, [])
       .filter((ingredient, index, flatArrIngredients) => {
         return flatArrIngredients.indexOf(ingredient) === index;
       })
@@ -266,10 +266,10 @@ const cakePrompts = {
     //    ...etc
     // }
 
-    const result = cakes.reduce((ingredients,cake) => {
+    const result = cakes.reduce((ingredients, cake) => {
       ingredients.push(...cake.toppings);
       return ingredients;
-    },[])
+    }, [])
       .reduce((ingredientList, ingredient) => {
         if (ingredientList[ingredient] === undefined) {
           ingredientList[ingredient] = 1;
@@ -277,7 +277,7 @@ const cakePrompts = {
           ingredientList[ingredient]++;
         }
         return ingredientList;
-    }, {});
+      }, {});
     return result;
 
     // Annotation:
@@ -333,7 +333,7 @@ const classPrompts = {
       const program = classroom.program.toLowerCase();
       capacity[`${program}Capacity`] += classroom.capacity;
       return capacity;
-    }, {feCapacity:0,beCapacity:0});
+    }, { feCapacity: 0, beCapacity: 0 });
     return result;
 
     // Annotation:
@@ -343,7 +343,9 @@ const classPrompts = {
   sortByCapacity() {
     // Return the array of classrooms sorted by their capacity (least capacity to greatest)
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = classrooms.sort((a, b) => {
+      return a.capacity - b.capacity;
+    });
     return result;
 
     // Annotation:
@@ -373,7 +375,10 @@ const breweryPrompts = {
     // Return the total beer count of all beers for every brewery e.g.
     // 40
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = breweries.reduce((beerCount, brewery) => {
+      beerCount += brewery.beers.length;
+      return beerCount;
+    }, 0);
     return result;
 
     // Annotation:
@@ -389,7 +394,9 @@ const breweryPrompts = {
     // ...etc.
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = breweries.map((brewery) => {
+      return { name: brewery.name, beercount: brewery.beers.length }
+    });
     return result;
 
     // Annotation:
@@ -401,7 +408,16 @@ const breweryPrompts = {
     // e.g.
     // { name: 'Barrel Aged Nature\'s Sweater', type: 'Barley Wine', abv: 10.9, ibu: 40 }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = breweries.reduce((beerList, brewery) => {
+      beerList.push(...brewery.beers);
+      return beerList;
+    }, [])
+      .reduce((highABV, beer) => {
+        if (!highABV.abv || highABV.abv < beer.abv) {
+          highABV = beer;
+        }
+        return highABV;
+      }, {})
     return result;
 
     // Annotation:
@@ -449,7 +465,15 @@ const turingPrompts = {
     //  { name: 'Robbie', studentCount: 18 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = instructors.map((instructor) => {
+      const tempObj = { name: instructor.name };
+
+      tempObj.studentCount = cohorts.filter((cohort) => {
+        return instructor.module === cohort.module;
+      })[0].studentCount
+
+      return tempObj;
+    })
     return result;
 
     // Annotation:
@@ -463,7 +487,18 @@ const turingPrompts = {
     // cohort1804: 10.5
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cohorts.reduce((studentsPerInstructorObj, cohort) => {
+      let numTeacher = 0;
+
+      instructors.forEach((instructor) => {
+        if (instructor.module === cohort.module) {
+          numTeacher++;
+        }
+      });
+
+      studentsPerInstructorObj[`cohort${cohort.cohort}`] = cohort.studentCount / numTeacher;
+      return studentsPerInstructorObj;
+    }, {});
     return result;
 
     // Annotation:
@@ -480,7 +515,22 @@ const turingPrompts = {
     //   Pam: [2, 4]
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = instructors.reduce((instructorQualList, instructor) => {
+      let canTeach = false;
+      cohorts.forEach((cohort) => {
+        canTeach = cohort.curriculum.some((subject) => {
+          return instructor.teaches.indexOf(subject) > -1;
+        })
+        if (canTeach && instructorQualList[instructor.name]) {
+          instructorQualList[instructor.name].push(cohort.module);
+        }
+        else if (!instructorQualList[instructor.name] && canTeach) {
+          instructorQualList[instructor.name] = [];
+          instructorQualList[instructor.name].push(cohort.module);
+        }
+      })
+      return instructorQualList;
+    }, {});
     return result;
 
     // Annotation:
