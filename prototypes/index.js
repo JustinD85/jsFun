@@ -395,7 +395,7 @@ const breweryPrompts = {
     // ]
 
     const result = breweries.map((brewery) => {
-      return { name: brewery.name, beercount: brewery.beers.length }
+      return { name: brewery.name, beerCount: brewery.beers.length }
     });
     return result;
 
@@ -475,6 +475,18 @@ const turingPrompts = {
       return tempObj;
     })
     return result;
+    /*
+      Karin's Answer: 
+      Q: Did you know to use find? Why?
+        A: Just knew from context of question.
+      Q: Do you refactor after or before you solve?
+        A: After each problem.
+
+    const result = instructors.map(instructor => {
+      let matchingMod = cohorts.find(cohort => instructor.module === cohort.module);
+      return {name: instructor.name, studentCount: matchingMod.studentCount}
+    })
+    */
 
     // Annotation:
     // Write your annotation here as a comment
@@ -547,7 +559,32 @@ const turingPrompts = {
     //   recursion: [ 'Pam', 'Leta' ]
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cohorts.map((cohort) => {
+      return cohort.curriculum;
+    })
+      .filter((subject, index, currArr) => {
+        return currArr.indexOf(subject) === index;
+      })
+      .reduce((flatSubjects, subjects) => {
+        flatSubjects.push(...subjects);
+
+        return flatSubjects;
+      }, [])
+      .reduce((subjectsTeachersTeach, subject) => {
+        instructors.forEach((instructor) => {
+          if (instructor.teaches.includes(subject) &&
+            subjectsTeachersTeach[subject] &&
+            !subjectsTeachersTeach[subject].includes(instructor.name)) {
+
+            subjectsTeachersTeach[subject].push(instructor.name);
+          } else if (instructor.teaches.includes(subject)) {
+
+            subjectsTeachersTeach[subject] = [];
+            subjectsTeachersTeach[subject].push(instructor.name);
+          }
+        })
+        return subjectsTeachersTeach;
+      }, {})
     return result;
 
     // Annotation:
@@ -582,7 +619,23 @@ const bossPrompts = {
     //   { bossName: 'Scar', sidekickLoyalty: 16 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = Object.keys(bosses).map((bossKey) => {
+      let {
+        name: bossName,
+        sidekickLoyalty = 0
+      } = bosses[bossKey];
+
+      //iterate through each sidekick in boss
+      bosses[bossKey].sidekicks.map((bossSidekick) => {
+        //grab their name 
+        //find them in teh sidekick array
+        //add their loyalty to their boss sidekickloyaltyscore
+        sidekickLoyalty += sidekicks.find((sidekick) => {
+          return sidekick.name === bossSidekick.name;
+        }).loyaltyToBoss
+      })
+      return { bossName, sidekickLoyalty };
+    });
     return result;
 
     // Annotation:
@@ -624,7 +677,28 @@ const astronomyPrompts = {
     //     color: 'red' }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = Object.keys(constellations)
+      .reduce((starNames, constellationKey) => {
+        starNames.push(...constellations[constellationKey].stars);
+        return starNames;
+      }, [])
+      .filter((starName, index, currArr) => {
+        return currArr.indexOf(starName) === index;
+      })
+      .filter((filteredStarName) => {
+
+        return stars.find((currStar) => {
+          return currStar.name === filteredStarName;
+        });
+      })
+      .map((correctStar) => {
+        return stars.find((currStar) => {
+          return currStar.name === correctStar
+        })
+      })
+      .sort((a, b) => {
+        return b.lightYearsFromEarth - a.lightYearsFromEarth;
+      })
     return result;
 
     // Annotation:
@@ -642,7 +716,16 @@ const astronomyPrompts = {
     //   red: [{obj}]
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = stars
+      .reduce((colorObj, star) => {
+        if (!colorObj[star.color]) {
+          colorObj[star.color] = [];
+        }
+        colorObj[star.color].push(star);
+        return colorObj;
+      }, {})
+
+
     return result;
 
     // Annotation:
@@ -662,7 +745,9 @@ const astronomyPrompts = {
     //   'Orion',
     //   'Centaurus' ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = stars.map((star) => {
+      return star.constellation;
+    });
     return result;
 
     // Annotation:
@@ -693,7 +778,12 @@ const ultimaPrompts = {
     // Return the sum of the amount of damage for all the weapons that our characters can use
     // Answer => 113
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = characters.reduce((sumDamage, character) => {
+      character.weapons.forEach((weaponName) => {
+        sumDamage += weapons[weaponName].damage;
+      })
+      return sumDamage;
+    }, 0);
     return result;
 
     // Annotation:
@@ -705,15 +795,25 @@ const ultimaPrompts = {
     // Return the sum damage and total range for each character as an object. 
     // ex: [ { Avatar: { damage: 27, range: 24 }, { Iolo: {...}, ...}
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = characters
+      .reduce((sumDmgRange, character) => {
+        let range = 0;
+        let damage = 0;
+        character.weapons.forEach((weaponName) => {
+          damage += weapons[weaponName].damage
+          range += weapons[weaponName].range
+        })
+        sumDmgRange.push({ [character.name]: { damage, range } });
+        return sumDmgRange;
+      }, [])
+   
+
     return result;
 
     // Annotation:
     // Write your annotation here as a comment
   },
 };
-
-
 
 module.exports = {
   breweryPrompts,
